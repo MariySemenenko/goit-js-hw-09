@@ -1,23 +1,29 @@
 import flatpickr from "flatpickr";
 import "flatpickr/dist/flatpickr.min.css";
 
+// створюємо константу, яка відповідає за час затримки в мілісекундах
 const TIMER_DELAY = 1000;
+
+// ініціалізуємо змінні, що будуть використовуватися в різних функціях
 let intervalId = null;
 let selectedDate = null;
 let currentDate = null;
 
-
+// знаходимо елементи на сторінці та зберігаємо їх у змінні
   const dateInput = document.querySelector('input#datetime-picker');
-  const btnStartTimer = document.querySelector('button[data-start-timer]');
+  const btnStartTimer = document.querySelector('button[data-start]');
   const daysRemaining = document.querySelector('[data-days]');
   const hoursRemaining = document.querySelector('[data-hours]');
  const minutesRemaining = document.querySelector('[data-minutes]');
   const secondsRemaining = document.querySelector('[data-seconds]');
 
-
+// вимикаємо кнопку "Start" на початку, оскільки дата ще не обрана
 btnStartTimer.disabled = true;
-btnStartTimer.addEventListener('click', timerStart);
 
+// додаємо обробник події "click" на кнопку "Start"
+btnStartTimer.addEventListener('click', () => timerStart());
+
+// змінна, в якій буде зберігатися кількість мілісекунд, що залишилися до обраної дати
 let remainingTime = 0;
 
 const options = {
@@ -29,33 +35,39 @@ const options = {
     onDateCheck(selectedDates);
   },
 };
-
+// створюємо календар з параметрами
 flatpickr(dateInput, options);
 
+// функція, яка перевіряє обрану дату
 function onDateCheck(selectedDates) {
+  // отримуємо кількість мілісекунд, що пройшли з 1 січня 1970 року
   selectedDate = selectedDates[0].getTime();
-  currentDate = new Date().getTime();
 
-  if (selectedDates > currentDate) {
+  // отримуємо поточну дату
+  currentDate = new Date().getTime();
+// якщо обрана дата в майбутньому, вмикаємо кнопку "Start"
+  if (selectedDate > currentDate) {
     btnStartTimer.disabled = false;
-    
-    return;
-  }
+  } else {
+    // якщо обрана дата в минулому, виводимо повідомлення і вимикаємо кнопку "Start"
   window.alert(
     "Please choose a date in the future"
   );
+  btnStartTimer.disabled = true;
+  }
 }
-
+// Запускаємо таймер
 function timerStart() {
+   // Встановлюємо інтервал таймера
   intervalId = setInterval(() => {
+     // Встановлюємо поточну дату в мілісекундах
     currentDate = new Date().getTime();
+    // Якщо залишилася 1 секунда
     if (selectedDate - currentDate <= 1000) {
-      clearInterval(intervalId);
-      btnStartTimer.disabled = true;
-      dateInput.disabled = false;
-
-      return;
-    } else {
+      clearInterval(intervalId);//інтервал очищається
+      btnStartTimer.disabled = true;//кнопка старт вимкнена
+      dateInput.disabled = false;//а поле dateInput увімкнене
+    } else {//в іншому випадку час конвертується за допомогою convertMs
       btnStartTimer.disabled = true;
       dateInput.disabled = true;
       currentDate += 1000;
@@ -90,4 +102,4 @@ function convertMs(ms) {
   );
   createMarkup({ days, hours, minutes, seconds });
   return { days, hours, minutes, seconds };
-}
+};
