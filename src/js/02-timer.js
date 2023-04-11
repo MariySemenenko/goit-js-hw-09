@@ -1,5 +1,8 @@
 import flatpickr from "flatpickr";
 import "flatpickr/dist/flatpickr.min.css";
+ import { Notify } from 'notiflix/build/notiflix-notify-aio';
+
+ Notify.failure('Please choose a date in the future');
 
 // створюємо константу, яка відповідає за час затримки в мілісекундах
 const TIMER_DELAY = 1000;
@@ -50,12 +53,8 @@ function onDateCheck(selectedDates) {
     btnStartTimer.disabled = false;
   } else {
     // якщо обрана дата в минулому, виводимо повідомлення і вимикаємо кнопку "Start"
-  window.alert(
-    "Please choose a date in the future"
-  );
-  btnStartTimer.disabled = true;
-  }
-}
+    Notify.failure('Please choose a date in the future');
+}}
 // Запускаємо таймер
 function timerStart() {
    // Встановлюємо інтервал таймера
@@ -86,7 +85,7 @@ function createMarkup({ days, hours, minutes, seconds }) {
 
 function addLeadingZero(value) {
   return String(value).padStart(2, '0');
-}
+};
 
 function convertMs(ms) {
   const second = 1000;
