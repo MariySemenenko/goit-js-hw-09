@@ -43,10 +43,10 @@ const { delay, step, amount } = e.currentTarget.elements;
         Notify.failure(`❌ Rejected promise ${position} in ${delay}ms`);
       });
       valueDelay += steps;
-  }
+      
+      }
 }
 
 
 
-// перший ділей має братись з 1го інпуту,
-//  а в тебе одразу збільшується. 
+ 
