@@ -1,14 +1,14 @@
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
 
-const refs = {
-  body: document.querySelector('body'),
-  form: document.querySelector('form.form'),
-  delay: document.querySelector('[name="delay"]'),
-  step: document.querySelector('[name="step"]'),
-  amount: document.querySelector('[name="amount"]'),
-};
 
-refs.form.addEventListener('click', onPromiseCreate);
+  const body = document.querySelector('body');
+  const form = document.querySelector('form.form');
+  const step = document.querySelector('[name="step"]');
+  const amount = document.querySelector('[name="amount"]');
+  const submit = document.querySelector('button');
+  const delay = document.querySelector('input[name="delay"]');
+
+form.addEventListener('submit', onPromiseCreate);
 
 function createPromise(position, delay) {
   const shouldResolve = Math.random() > 0.3;
@@ -23,15 +23,17 @@ function createPromise(position, delay) {
   });
 }
 
+
+
 function onPromiseCreate(e) {
   e.preventDefault();
+const { delay, step, amount } = e.currentTarget.elements;
+  let valueDelay = Number(delay.value);
+  let steps = Number(step.value);
+  let amounts= Number(amount.value);
 
-  let valueDelay = Number(refs.delay.value);
-  let step = Number(refs.step.value);
-  let amount = Number(refs.amount.value);
-
-  for (let i = 1; i <= amount; i += 1) {
-    let promiseDelay = valueDelay + step * i;
+  for (let i = 1; i <= amounts; i += 1) {
+    let promiseDelay = valueDelay;
 
     createPromise(i, promiseDelay)
       .then(({ position, delay }) => {
@@ -40,5 +42,11 @@ function onPromiseCreate(e) {
       .catch(({ position, delay }) => {
         Notify.failure(`❌ Rejected promise ${position} in ${delay}ms`);
       });
+      valueDelay += steps;
   }
 }
+
+
+
+// перший ділей має братись з 1го інпуту,
+//  а в тебе одразу збільшується. 
